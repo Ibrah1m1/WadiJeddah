@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import Header from '@/components/Header';
 import Hero from '@/sections/Hero';
