@@ -17,7 +17,6 @@ export default function StartupBrandVisual({
 }: StartupBrandVisualProps) {
   const isAr = language === 'ar';
   const startupName = isAr ? startup.nameAr : startup.nameEn;
-  const founderName = isAr ? startup.founderAr : startup.founderEn;
   const isDetail = variant === 'detail';
 
   return (

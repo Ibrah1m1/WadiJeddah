@@ -15,9 +15,18 @@ export default function App() {
   const [currentRoute, setCurrentRoute] = useState('/');
   const [previousRoute, setPreviousRoute] = useState('/');
 
+  const getNormalizedPath = useCallback((path: string) => {
+    const base = import.meta.env.BASE_URL;
+    if (base && base !== '/' && path.startsWith(base)) {
+      path = path.slice(base.length);
+    }
+    if (!path.startsWith('/')) path = '/' + path;
+    return path;
+  }, []);
+
   // Parse URL on mount
   useEffect(() => {
-    const path = window.location.pathname;
+    const path = getNormalizedPath(window.location.pathname);
     if (path === '/startups') {
       setCurrentRoute('/startups');
     } else if (path === '/map') {
@@ -26,7 +35,7 @@ export default function App() {
       const id = path.replace('/startup/', '');
       setCurrentRoute(`/startup/${id}`);
     }
-  }, []);
+  }, [getNormalizedPath]);
 
   // Update URL when route changes
   const navigate = useCallback((route: string) => {
@@ -34,14 +43,22 @@ export default function App() {
 
     setPreviousRoute(currentRoute);
     setCurrentRoute(route);
-    window.history.pushState({}, '', route);
+    
+    // Prefix route with BASE_URL for history API
+    let fullUrl = route;
+    const base = import.meta.env.BASE_URL;
+    if (base && base !== '/') {
+      fullUrl = base.replace(/\/$/, '') + route;
+    }
+    
+    window.history.pushState({}, '', fullUrl);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentRoute]);
 
   // Handle browser back/forward
   useEffect(() => {
     const handlePopState = () => {
-      const path = window.location.pathname;
+      const path = getNormalizedPath(window.location.pathname);
       if (path === '/startups') {
         setCurrentRoute('/startups');
       } else if (path === '/map') {
@@ -56,7 +73,7 @@ export default function App() {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [getNormalizedPath]);
 
   const handleBackFromStartups = useCallback(() => {
     navigate('/');

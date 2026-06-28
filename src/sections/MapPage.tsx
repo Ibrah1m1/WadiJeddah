@@ -6,7 +6,7 @@ interface MapPageProps {
   onClose: () => void;
 }
 
-export default function MapPage({ navigate, onClose }: MapPageProps) {
+export default function MapPage({ onClose }: MapPageProps) {
   const { language } = useLanguage();
   const isAr = language === 'ar';
 
