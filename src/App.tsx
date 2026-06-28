@@ -1,0 +1,156 @@
+import { useState, useEffect, useCallback } from 'react';
+import Header from '@/components/Header';
+import Hero from '@/sections/Hero';
+import Stats from '@/sections/Stats';
+import About from '@/sections/About';
+import Services from '@/sections/Services';
+import Footer from '@/sections/Footer';
+import StartupsPage from '@/sections/StartupsPage';
+import StartupDetail from '@/sections/StartupDetail';
+import MapPage from '@/sections/MapPage';
+import BackgroundEffects from '@/components/BackgroundEffects';
+import { motion, AnimatePresence } from 'framer-motion';
+
+export default function App() {
+  const [currentRoute, setCurrentRoute] = useState('/');
+  const [previousRoute, setPreviousRoute] = useState('/');
+
+  // Parse URL on mount
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path === '/startups') {
+      setCurrentRoute('/startups');
+    } else if (path === '/map') {
+      setCurrentRoute('/map');
+    } else if (path.startsWith('/startup/')) {
+      const id = path.replace('/startup/', '');
+      setCurrentRoute(`/startup/${id}`);
+    }
+  }, []);
+
+  // Update URL when route changes
+  const navigate = useCallback((route: string) => {
+    if (route === currentRoute) return;
+
+    setPreviousRoute(currentRoute);
+    setCurrentRoute(route);
+    window.history.pushState({}, '', route);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentRoute]);
+
+  // Handle browser back/forward
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path === '/startups') {
+        setCurrentRoute('/startups');
+      } else if (path === '/map') {
+        setCurrentRoute('/map');
+      } else if (path.startsWith('/startup/')) {
+        const id = path.replace('/startup/', '');
+        setCurrentRoute(`/startup/${id}`);
+      } else {
+        setCurrentRoute('/');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleBackFromStartups = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  const handleBackFromDetail = useCallback(() => {
+    if (previousRoute === '/map') {
+      navigate('/map');
+    } else {
+      navigate('/startups');
+    }
+  }, [navigate, previousRoute]);
+
+  const handleBackFromMap = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  // Extract startup ID from route
+  const startupId = currentRoute.startsWith('/startup/')
+    ? currentRoute.replace('/startup/', '')
+    : '';
+
+  const showHomePage = currentRoute === '/';
+  const showStartupsPage = currentRoute === '/startups';
+  const showStartupDetail = currentRoute.startsWith('/startup/');
+  const showMapPage = currentRoute === '/map';
+
+  return (
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      <BackgroundEffects />
+      <Header currentRoute={currentRoute} navigate={navigate} />
+      <main className="relative">
+        <AnimatePresence mode="wait">
+          {showHomePage && (
+            <motion.div
+              key="home"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="absolute w-full"
+            >
+              <Hero navigate={navigate} />
+              <Stats />
+              <About />
+              <Services />
+              <Footer navigate={navigate} />
+            </motion.div>
+          )}
+
+          {showStartupsPage && (
+            <motion.div
+              key="startups"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="absolute w-full"
+            >
+              <StartupsPage navigate={navigate} onClose={handleBackFromStartups} />
+            </motion.div>
+          )}
+
+          {showStartupDetail && (
+            <motion.div
+              key="detail"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="absolute w-full"
+            >
+              <StartupDetail
+                startupId={startupId}
+                navigate={navigate}
+                onBack={handleBackFromDetail}
+              />
+            </motion.div>
+          )}
+
+          {showMapPage && (
+            <motion.div
+              key="map"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="absolute w-full"
+            >
+              <MapPage navigate={navigate} onClose={handleBackFromMap} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+    </div>
+  );
+}
