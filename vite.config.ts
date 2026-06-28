@@ -5,7 +5,7 @@ import { inspectAttr } from 'kimi-plugin-inspect-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/Wadi-Jeddah/',
+  base: '/WadiJeddah/',
   plugins: [inspectAttr(), react()],
   server: {
     port: 3000,
