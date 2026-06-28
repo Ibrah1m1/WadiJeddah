@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router';
 import Header from '@/components/Header';
 import Hero from '@/sections/Hero';
 import Stats from '@/sections/Stats';
@@ -12,80 +13,34 @@ import BackgroundEffects from '@/components/BackgroundEffects';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function App() {
-  const [currentRoute, setCurrentRoute] = useState('/');
-  const [previousRoute, setPreviousRoute] = useState('/');
+  const routerNavigate = useNavigate();
+  const location = useLocation();
+  const currentRoute = location.pathname;
+  const previousRoute = useRef('/');
 
-  const getNormalizedPath = useCallback((path: string) => {
-    const base = import.meta.env.BASE_URL;
-    if (base && base !== '/' && path.startsWith(base)) {
-      path = path.slice(base.length);
-    }
-    if (!path.startsWith('/')) path = '/' + path;
-    return path;
-  }, []);
-
-  // Parse URL on mount
   useEffect(() => {
-    const path = getNormalizedPath(window.location.pathname);
-    if (path === '/startups') {
-      setCurrentRoute('/startups');
-    } else if (path === '/map') {
-      setCurrentRoute('/map');
-    } else if (path.startsWith('/startup/')) {
-      const id = path.replace('/startup/', '');
-      setCurrentRoute(`/startup/${id}`);
-    }
-  }, [getNormalizedPath]);
-
-  // Update URL when route changes
-  const navigate = useCallback((route: string) => {
-    if (route === currentRoute) return;
-
-    setPreviousRoute(currentRoute);
-    setCurrentRoute(route);
-    
-    // Prefix route with BASE_URL for history API
-    let fullUrl = route;
-    const base = import.meta.env.BASE_URL;
-    if (base && base !== '/') {
-      fullUrl = base.replace(/\/$/, '') + route;
-    }
-    
-    window.history.pushState({}, '', fullUrl);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return () => {
+      previousRoute.current = currentRoute;
+    };
   }, [currentRoute]);
 
-  // Handle browser back/forward
-  useEffect(() => {
-    const handlePopState = () => {
-      const path = getNormalizedPath(window.location.pathname);
-      if (path === '/startups') {
-        setCurrentRoute('/startups');
-      } else if (path === '/map') {
-        setCurrentRoute('/map');
-      } else if (path.startsWith('/startup/')) {
-        const id = path.replace('/startup/', '');
-        setCurrentRoute(`/startup/${id}`);
-      } else {
-        setCurrentRoute('/');
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [getNormalizedPath]);
+  const navigate = useCallback((route: string) => {
+    if (route === currentRoute) return;
+    routerNavigate(route);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentRoute, routerNavigate]);
 
   const handleBackFromStartups = useCallback(() => {
     navigate('/');
   }, [navigate]);
 
   const handleBackFromDetail = useCallback(() => {
-    if (previousRoute === '/map') {
+    if (previousRoute.current === '/map') {
       navigate('/map');
     } else {
       navigate('/startups');
     }
-  }, [navigate, previousRoute]);
+  }, [navigate]);
 
   const handleBackFromMap = useCallback(() => {
     navigate('/');
