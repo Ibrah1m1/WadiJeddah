@@ -52,7 +52,7 @@ export default function App() {
 
   return (
     // The root div is fixed to the viewport height; each page scrolls inside itself
-    <div className="fixed inset-0 bg-background overflow-hidden">
+    <div className="fixed bg-background overflow-hidden" style={{ inset: 0, paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <BackgroundEffects />
       <Header currentRoute={currentRoute} navigate={navigate} />
       <AnimatePresence mode="wait">
@@ -64,7 +64,7 @@ export default function App() {
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             // Each page is its own independent scroll container
-            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[72px]"
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden"
           >
             <Hero navigate={navigate} />
             <Stats />
@@ -81,7 +81,7 @@ export default function App() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[72px]"
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[88px]"
           >
             <StartupsPage navigate={navigate} onClose={handleBackFromStartups} />
           </motion.div>
@@ -94,7 +94,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[72px]"
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[88px]"
           >
             <StartupDetail
               startupId={startupId}
@@ -111,7 +111,7 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[72px]"
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[88px]"
           >
             <MapPage navigate={navigate} onClose={handleBackFromMap} />
           </motion.div>
