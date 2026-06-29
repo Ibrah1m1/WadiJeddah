@@ -119,7 +119,7 @@ export default function Header({ currentRoute, navigate }: HeaderProps) {
           initial={{ opacity: 0, y: -20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.95 }}
-          className="absolute top-[80px] left-4 right-4 glass-panel rounded-2xl md:hidden overflow-hidden"
+          className="absolute top-[80px] left-4 right-4 glass-panel rounded-2xl md:hidden overflow-hidden pointer-events-auto"
         >
           <nav className="flex flex-col p-4 gap-2">
             {navItems.map((item) => (
