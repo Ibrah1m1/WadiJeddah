@@ -19,8 +19,20 @@ export default function App() {
   const previousRoute = useRef('/');
 
   useEffect(() => {
+    // Keep track of previous route
     return () => {
       previousRoute.current = currentRoute;
+    };
+  }, [currentRoute]);
+
+  // Robust scroll to top on route change (handles iOS Safari & Framer Motion timings)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const timer1 = setTimeout(() => window.scrollTo(0, 0), 50);
+    const timer2 = setTimeout(() => window.scrollTo(0, 0), 350); // After the 0.3s AnimatePresence exit
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
     };
   }, [currentRoute]);
 
