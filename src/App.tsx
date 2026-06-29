@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import Header from '@/components/Header';
 import Hero from '@/sections/Hero';
@@ -18,29 +18,9 @@ export default function App() {
   const currentRoute = location.pathname;
   const previousRoute = useRef('/');
 
-  useEffect(() => {
-    // Keep track of previous route
-    return () => {
-      previousRoute.current = currentRoute;
-    };
-  }, [currentRoute]);
-
-  // Robust scroll to top on route change (handles iOS Safari & Framer Motion timings)
-  useEffect(() => {
-    const scrollToTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    
-    scrollToTop();
-    const timer1 = setTimeout(scrollToTop, 50);
-    const timer2 = setTimeout(scrollToTop, 350); // After the 0.3s AnimatePresence exit
-    
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [currentRoute]);
-
   const navigate = useCallback((route: string) => {
     if (route === currentRoute) return;
+    previousRoute.current = currentRoute;
     routerNavigate(route);
   }, [currentRoute, routerNavigate]);
 
@@ -71,72 +51,72 @@ export default function App() {
   const showMapPage = currentRoute === '/map';
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    // The root div is fixed to the viewport height; each page scrolls inside itself
+    <div className="fixed inset-0 bg-background overflow-hidden">
       <BackgroundEffects />
       <Header currentRoute={currentRoute} navigate={navigate} />
-      <main className="relative">
-        <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}>
-          {showHomePage && (
-            <motion.div
-              key="home"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="absolute w-full"
-            >
-              <Hero navigate={navigate} />
-              <Stats />
-              <About />
-              <Services />
-              <Footer navigate={navigate} />
-            </motion.div>
-          )}
+      <AnimatePresence mode="wait">
+        {showHomePage && (
+          <motion.div
+            key="home"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            // Each page is its own independent scroll container
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[72px]"
+          >
+            <Hero navigate={navigate} />
+            <Stats />
+            <About />
+            <Services />
+            <Footer navigate={navigate} />
+          </motion.div>
+        )}
 
-          {showStartupsPage && (
-            <motion.div
-              key="startups"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="absolute w-full"
-            >
-              <StartupsPage navigate={navigate} onClose={handleBackFromStartups} />
-            </motion.div>
-          )}
+        {showStartupsPage && (
+          <motion.div
+            key="startups"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[72px]"
+          >
+            <StartupsPage navigate={navigate} onClose={handleBackFromStartups} />
+          </motion.div>
+        )}
 
-          {showStartupDetail && (
-            <motion.div
-              key="detail"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="absolute w-full"
-            >
-              <StartupDetail
-                startupId={startupId}
-                navigate={navigate}
-                onBack={handleBackFromDetail}
-              />
-            </motion.div>
-          )}
+        {showStartupDetail && (
+          <motion.div
+            key={`detail-${startupId}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[72px]"
+          >
+            <StartupDetail
+              startupId={startupId}
+              navigate={navigate}
+              onBack={handleBackFromDetail}
+            />
+          </motion.div>
+        )}
 
-          {showMapPage && (
-            <motion.div
-              key="map"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="absolute w-full"
-            >
-              <MapPage navigate={navigate} onClose={handleBackFromMap} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </main>
+        {showMapPage && (
+          <motion.div
+            key="map"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-[72px]"
+          >
+            <MapPage navigate={navigate} onClose={handleBackFromMap} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

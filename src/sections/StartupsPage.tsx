@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { startups } from '@/data/startups';
 import { Search, Filter, ArrowRight, ArrowLeft, X } from 'lucide-react';
 import type { Startup } from '@/data/startups';
@@ -48,10 +48,6 @@ export default function StartupsPage({ navigate, onClose }: StartupsPageProps) {
   const { language, t } = useLanguage();
   const isAr = language === 'ar';
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, []);
-
   const sectors = useMemo(() => {
     const allSectors = startups.map(s => isAr ? s.sectorAr : s.sectorEn);
     return Array.from(new Set(allSectors)).filter(Boolean);
@@ -98,7 +94,7 @@ export default function StartupsPage({ navigate, onClose }: StartupsPageProps) {
   }, [searchQuery, activeSector, activeStage, sortBy, isAr]);
 
   return (
-    <div className="min-h-screen bg-background/80 backdrop-blur-[40px] pt-[72px]">
+    <div className="min-h-full bg-background/80 backdrop-blur-[40px]">
       {/* Header */}
       <div className="bg-muted/30 border-b border-border py-8 md:py-12">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">

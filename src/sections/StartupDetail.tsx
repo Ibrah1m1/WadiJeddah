@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { startups } from '@/data/startups';
 import { ArrowRight, ArrowLeft, User, Clock, Mail, Phone, Globe, Linkedin, Twitter } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -13,16 +12,12 @@ interface StartupDetailProps {
 export default function StartupDetail({ startupId, onBack }: StartupDetailProps) {
   const { language, t } = useLanguage();
   const isAr = language === 'ar';
-  
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, []);
 
   const startup = startups.find((s) => s.id.toString() === startupId);
 
   if (!startup) {
     return (
-      <div className="min-h-screen bg-background pt-[72px] flex items-center justify-center">
+      <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 72px)' }}>
         <div className="text-center">
           <p className="text-muted-foreground text-lg mb-4">{isAr ? 'الشركة غير موجودة' : 'Startup not found'}</p>
           <button
@@ -37,7 +32,7 @@ export default function StartupDetail({ startupId, onBack }: StartupDetailProps)
   }
 
   return (
-    <div className="min-h-screen bg-background/80 backdrop-blur-[40px] pt-[72px]">
+    <div className="min-h-full bg-background/80 backdrop-blur-[40px]">
       {/* Header */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-[800px] mx-auto px-4 sm:px-6 py-8 md:py-12">

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -11,12 +10,8 @@ export default function MapPage({ onClose }: MapPageProps) {
   const { language } = useLanguage();
   const isAr = language === 'ar';
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, []);
-
   return (
-    <div className="min-h-screen bg-background/80 backdrop-blur-[40px] pt-[72px] flex flex-col">
+    <div className="min-h-full bg-background/80 backdrop-blur-[40px] flex flex-col">
       {/* Header */}
       <div className="bg-card border-b border-border px-4 sm:px-6 py-4">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between">
