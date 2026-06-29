@@ -27,7 +27,6 @@ export default function App() {
   const navigate = useCallback((route: string) => {
     if (route === currentRoute) return;
     routerNavigate(route);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentRoute, routerNavigate]);
 
   const handleBackFromStartups = useCallback(() => {
@@ -61,7 +60,7 @@ export default function App() {
       <BackgroundEffects />
       <Header currentRoute={currentRoute} navigate={navigate} />
       <main className="relative">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
           {showHomePage && (
             <motion.div
               key="home"
