@@ -17,7 +17,7 @@ export default function StartupDetail({ startupId, onBack }: StartupDetailProps)
 
   if (!startup) {
     return (
-      <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 72px)' }}>
+      <div className="flex items-center justify-center pt-[88px]" style={{ minHeight: 'calc(100vh - 72px)' }}>
         <div className="text-center">
           <p className="text-muted-foreground text-lg mb-4">{isAr ? 'الشركة غير موجودة' : 'Startup not found'}</p>
           <button
@@ -32,7 +32,7 @@ export default function StartupDetail({ startupId, onBack }: StartupDetailProps)
   }
 
   return (
-    <div className="min-h-full bg-background/80 backdrop-blur-[40px]">
+    <div className="min-h-full bg-background/80 backdrop-blur-[40px] pt-[88px]">
       {/* Header */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-[800px] mx-auto px-4 sm:px-6 py-8 md:py-12">

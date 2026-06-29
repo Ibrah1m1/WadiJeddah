@@ -11,7 +11,7 @@ export default function MapPage({ onClose }: MapPageProps) {
   const isAr = language === 'ar';
 
   return (
-    <div className="min-h-full bg-background/80 backdrop-blur-[40px] flex flex-col">
+    <div className="min-h-full bg-background/80 backdrop-blur-[40px] flex flex-col pt-[88px]">
       {/* Header */}
       <div className="bg-card border-b border-border px-4 sm:px-6 py-4">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between">

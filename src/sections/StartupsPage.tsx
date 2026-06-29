@@ -94,7 +94,7 @@ export default function StartupsPage({ navigate, onClose }: StartupsPageProps) {
   }, [searchQuery, activeSector, activeStage, sortBy, isAr]);
 
   return (
-    <div className="min-h-full bg-background/80 backdrop-blur-[40px]">
+    <div className="min-h-full bg-background/80 backdrop-blur-[40px] pt-[88px]">
       {/* Header */}
       <div className="bg-muted/30 border-b border-border py-8 md:py-12">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
