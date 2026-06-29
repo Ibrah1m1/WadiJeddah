@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { startups } from '@/data/startups';
 import { Search, Filter, ArrowRight, ArrowLeft, X } from 'lucide-react';
 import type { Startup } from '@/data/startups';
@@ -47,6 +47,10 @@ export default function StartupsPage({ navigate, onClose }: StartupsPageProps) {
   const [showFilters, setShowFilters] = useState(false);
   const { language, t } = useLanguage();
   const isAr = language === 'ar';
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const sectors = useMemo(() => {
     const allSectors = startups.map(s => isAr ? s.sectorAr : s.sectorEn);

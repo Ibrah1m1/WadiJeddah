@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { startups } from '@/data/startups';
 import { ArrowRight, ArrowLeft, User, Clock, Mail, Phone, Globe, Linkedin, Twitter } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -13,6 +14,10 @@ export default function StartupDetail({ startupId, onBack }: StartupDetailProps)
   const { language, t } = useLanguage();
   const isAr = language === 'ar';
   
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const startup = startups.find((s) => s.id.toString() === startupId);
 
   if (!startup) {
