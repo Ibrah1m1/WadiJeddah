@@ -49,7 +49,7 @@ export default function StartupsPage({ navigate, onClose }: StartupsPageProps) {
   const isAr = language === 'ar';
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, []);
 
   const sectors = useMemo(() => {

@@ -15,7 +15,7 @@ export default function StartupDetail({ startupId, onBack }: StartupDetailProps)
   const isAr = language === 'ar';
   
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, []);
 
   const startup = startups.find((s) => s.id.toString() === startupId);

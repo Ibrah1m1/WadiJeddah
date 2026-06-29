@@ -27,9 +27,12 @@ export default function App() {
 
   // Robust scroll to top on route change (handles iOS Safari & Framer Motion timings)
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const timer1 = setTimeout(() => window.scrollTo(0, 0), 50);
-    const timer2 = setTimeout(() => window.scrollTo(0, 0), 350); // After the 0.3s AnimatePresence exit
+    const scrollToTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    
+    scrollToTop();
+    const timer1 = setTimeout(scrollToTop, 50);
+    const timer2 = setTimeout(scrollToTop, 350); // After the 0.3s AnimatePresence exit
+    
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
@@ -72,7 +75,7 @@ export default function App() {
       <BackgroundEffects />
       <Header currentRoute={currentRoute} navigate={navigate} />
       <main className="relative">
-        <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
+        <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}>
           {showHomePage && (
             <motion.div
               key="home"
